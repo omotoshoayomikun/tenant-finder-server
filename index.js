@@ -34,6 +34,11 @@ app.listen(port, () => {
 const User = require('./models/users');
 const Message = require('./models/messages')
 
+
+app.get('/confirm', (req, res) => {
+    res.status(200).json({message: 'The Api works, Thank God'})
+})
+
 // endpoint to create user
 app.post('/register', (req, res) => {
     const { firstName, lastName, phone, email, gender, state, category, password, image } = req.body
@@ -70,7 +75,7 @@ const createToken = (userId) => {
     return token;
 }
 
-app.get('/login', (req, res) => {
+app.post('/login', (req, res) => {
     const { email, password } = req.body
 
     // check for the particular user in the database
@@ -91,3 +96,6 @@ app.get('/login', (req, res) => {
         console.log(err)
     })
 })
+
+
+
