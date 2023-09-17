@@ -52,13 +52,42 @@ app.post('/register', (req, res) => {
         })
     }).catch((err) => {
         res.status(500).json({
-            message: 'Error creating user'
+            message: 'Check your Internet connection'
         })
     })
 })
 
-app.get('/register', (req, res) => {
-    res.status(200).json({
-        message: 'GET REQUEST Register endpoint'
+
+// functions to create a token for the user
+
+const createToken = (userId) => {
+    const payload = {
+        userId: userId,
+    }
+
+    // Generating token with a secret key and expiration time
+    const token = jwt.sign(payload, "Q$r2k6WBn!jCWZK", { expiresIn: "1hr"})
+    return token;
+}
+
+app.get('/login', (req, res) => {
+    const { email, password } = req.body
+
+    // check for the particular user in the database
+    User.findOne({email}).then((user) => {
+        if(!user) {
+           return res.status(404).json({message: 'User not found'});
+        }
+
+        // comparing if the email and password are correct
+        if(user.password !== password) {
+            return res.status.apply(404).json({message: 'Invalid password'});
+        }
+
+        const token = createToken(user._id)
+        res.status(200).json({token})
+    }).catch((err) => {
+        res.status(500).json({message: 'Check your internet connection'})
+        console.log(err)
     })
 })
