@@ -83,6 +83,9 @@ const createToken = (userId) => {
 app.post('/login', (req, res) => {
     const { email, password } = req.body
 
+    if(!email ||!password) {
+        return res.status(404).json({message: "email and password are required"});
+    }
     // check for the particular user in the database
     User.findOne({email}).then((user) => {
         if(!user) {
