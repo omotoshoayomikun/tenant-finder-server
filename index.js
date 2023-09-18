@@ -84,12 +84,12 @@ app.post('/login', (req, res) => {
     const { email, password } = req.body
 
     if(!email ||!password) {
-        return res.status(404).json({message: "email and password are required"});
+        return res.status(401).json({message: "email and password are required"});
     }
     // check for the particular user in the database
     User.findOne({email}).then((user) => {
         if(!user) {
-           return res.status(404).json({message: 'User not found'});
+           return res.status(402).json({message: 'User not found'});
         }
 
         // comparing if the email and password are correct
