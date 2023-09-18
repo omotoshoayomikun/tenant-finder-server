@@ -11,7 +11,7 @@ const cors = require('cors');
 app.use(cors(
     {
         origin: ['https://tenant-finder-server.vercel.app/'],
-        methods: ['POST', 'GET'],
+        methods: ['POST', 'PUT', 'DELETE', 'GET'],
         credentials: true,
     }
 ))
