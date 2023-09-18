@@ -10,8 +10,8 @@ const port = 3000;
 const cors = require('cors');
 app.use(cors(
     {
-        origin: 'https://tenant-finder-server.vercel.app/',
-        methods: ['POST', 'PUT', 'DELETE', 'GET'],
+        origin: ['https://tenant-finder-server.vercel.app/'],
+        methods: ['POST', 'GET'],
         credentials: true,
     }
 ))
