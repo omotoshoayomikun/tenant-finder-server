@@ -94,7 +94,7 @@ app.post('/login', (req, res) => {
 
         // comparing if the email and password are correct
         if(user.password !== password) {
-            return res.status.apply(404).json({message: 'Invalid password'});
+            return res.status.apply(403).json({message: 'Invalid password'});
         }
 
         const token = createToken(user._id)
