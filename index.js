@@ -8,7 +8,13 @@ const app = express();
 app.use(express.json())
 const port = 3000;
 const cors = require('cors');
-app.use(cors())
+app.use(cors(
+    {
+        origin: 'https://tenant-finder-server.vercel.app/',
+        methods: ['POST', 'PUT', 'DELETE', 'GET'],
+        credentials: true,
+    }
+))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
@@ -31,13 +37,12 @@ app.listen(port, () => {
     console.log('Server runing on port 3000') 
 })
 
-const User = require('./models/users');
-const Message = require('./models/messages')
-
-
-app.get('/confirm', (req, res) => {
+app.get('/', (req, res) => {
     res.status(200).json({message: 'The Api works, Thank God'})
 })
+
+const User = require('./models/users');
+const Message = require('./models/messages')
 
 // endpoint to create user
 app.post('/register', (req, res) => {
