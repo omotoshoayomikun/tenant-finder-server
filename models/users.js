@@ -15,10 +15,14 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true, 
+        required: true,
         unique: true
     },
     state: {
+        type: String,
+        required: true
+    },
+    address: {
         type: String,
         required: true
     },
@@ -34,10 +38,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    image: {
-        type: String,
-        // required: true
-    }, 
+    images: {
+        type: [
+            {
+                cloudinary_id: { type: String, required: true },
+                uri: { type: String, required: true }
+            }
+        ],
+    },
     // houseToRent: {
     //     type: [
     //         {

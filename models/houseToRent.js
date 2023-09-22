@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const houseToRentSchema = new mongoose.Schema({
     price: {
-        type: String,
+        type: Number,
         required: true
     },
     title: {
@@ -21,20 +21,33 @@ const houseToRentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    bedrooms: {
+    bedroom: {
+        type: Number,
+        required: true
+    },
+    state: {
         type: String,
         required: true
     },
     toilet: {
-        type: String,
+        type: Number,
         required: true
     },
     square: {
-        type: String
+        type: Number
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+    images: {
+        type: [
+            {
+                cloudinary_id: { type: String, required: true },
+                uri: { type: String, required: true }
+            }
+        ],
+        required: true
     }
 })
 
