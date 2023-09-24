@@ -46,25 +46,12 @@ const userSchema = new mongoose.Schema({
             }
         ],
     },
-    // houseToRent: {
-    //     type: [
-    //         {
-    //             price: { type: String, required: true },
-    //             title: { type: String, required: true },
-    //             location: { type: String, required: true },
-    //             description: { type: String, required: true },
-    //             bedrooms: { type: Number, required: true },
-    //             toilet: { type: Number, required: true },
-    //             square: { type: Number },
-    //         }
-    //     ]
-    // },
     friends: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         }
-    ]
+    ],
 })
 
 const User = mongoose.model('User', userSchema);

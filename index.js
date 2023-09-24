@@ -16,7 +16,7 @@ app.use(cors(
         credentials: true,
     }
 ))
-app.use(cors());
+// app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
@@ -49,9 +49,9 @@ const ImageMulter = require('./utils/multer')
 
 // endpoint to create user
 app.post('/register', (req, res) => {
-    const { firstName, lastName, phone, email, gender, state, category, password, image } = req.body
+    const { firstName, lastName, phone, email, gender, state, category, password, address } = req.body
 
-    const newUser = new User({ firstName, lastName, phone, email, gender, state, category, password, image })
+    const newUser = new User({ firstName, lastName, phone, email, gender, state, category, password, address })
 
 
     // save the user to the database
@@ -64,6 +64,7 @@ app.post('/register', (req, res) => {
             res.status(500).json({
                 message: 'Check your Internet connection'
             })
+            console.log(err)
         })
 })
 
@@ -105,6 +106,41 @@ app.post('/login', (req, res) => {
 })
 
 
+app.get('/check-friend/:senderId/:recepientId', async (req, res) => {
+
+    const { senderId, recepientId } = req.params
+    
+    try {
+        const sender = await User.findById(senderId).populate("friends");
+        const recepient = await User.findById(recepientId).populate("friends");
+        console.log(sender)
+        console.log(recepient)
+
+        // const checkRecepient = sender.friends = sender.friends.find(friend => friend.toString() === recepientId.toString());
+        const checkRecepient = sender.friends.includes(recepientId);
+        // const checkSender = recepient.friends = recepient.friends.find(friend => friend.toString() === senderId.toString());
+        const checkSender = recepient.friends.includes(senderId);
+
+        if (!checkRecepient) {
+            sender.friends.push(recepientId);
+        }
+
+        if (!checkSender) {
+            recepient.friends.push(recepientId);
+        }
+
+        await sender.save()
+        await recepient.save()
+
+        res.status(200).json({ message: 'success' })
+    } catch (err) {
+        console.log(err)
+        res.status(404).json({ message: err });
+    }
+
+})
+
+
 app.post('/housetorent', ImageMulter.array('images'), async (req, res) => {
     const { body, files } = req
     // const { price, title, state, location, description, bedroom, toilet, square, userId } = body
@@ -131,6 +167,26 @@ app.post('/housetorent', ImageMulter.array('images'), async (req, res) => {
     }
 })
 
+
+// app.post('/messages', ImageMulter.array('images'), (req, res) => {
+//     const { senderId, recepientId, messageType, messageText } = req.body
+
+//     try {
+
+//         const newMessage = new Message({
+//             senderId,
+//             recepientId,
+//             messageType,
+//             messageText,
+//             timeStamp: new Date(),
+//             // image
+//         })
+//         res.status(200).json(newMessage)
+//     } catch (err) {
+//         res.status(500).json({ message: 'Check your internet connection' })
+//     }
+
+// })
 
 
 //      PUT ENDPOINT API ENVIRONMENT
@@ -227,7 +283,7 @@ app.get('/house/:houseId', async (req, res) => {
 
 app.get('/housetorent', async (req, res) => {
     try {
-        const response = await HouseToRent.find().populate("userId", "firstName lastName state images").lean()
+        const response = await HouseToRent.find().populate("userId", "firstName lastName state images _id").lean()
         res.status(200).json(response)
     }
     catch (err) {
@@ -246,6 +302,7 @@ app.get('/listofhousetoresnt/:userId', async (req, res) => {
         res.status(500).json({ message: 'Check your internet connection' })
     }
 })
+
 
 //      DELETE API ENVIROMENT 
 
